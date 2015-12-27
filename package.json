@@ -1,7 +1,7 @@
 {
   "name": "ngoose",
   "description": "javascript object factory with defaults",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "andrea@parro.it",
   "repository": "parro-it/ngoose.git",
   "license": "MIT",
