@@ -2,18 +2,25 @@
   "name": "ngoose",
   "description": "javascript object factory with defaults",
   "version": "1.0.0",
-  "author": "andrea@parro.it"
-  "repository": "parro-it/ngoose.git"
-  },
-  "licenses": "MIT",
+  "author": "andrea@parro.it",
+  "repository": "parro-it/ngoose.git",
+  "license": "MIT",
   "main": "lib/ngoose",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">=5"
+  },
+  "eslintConfig": {
+    "extends": "js"
   },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha",
+    "lint": "eslint lib test"
   },
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
+    "eslint-config-js": "^2.0.2",
     "expect.js": "^0.2.0",
     "mocha": "^2.3.4"
   },
