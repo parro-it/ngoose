@@ -97,7 +97,6 @@ You can compose models with other models or with inlined objects:
   const instance = bill();
   console.log(instance);
 ```
-instance will contains:
 > {
 >   customer: {
 >     name: 'unknown',
@@ -105,11 +104,10 @@ instance will contains:
 >   },
 >   payment: { terms: '', days: 30 }
 > }
-```
-
 
 
 ## Examples
+
 See [tests](test.js) for further usage examples.
 
 ## License
