@@ -5,7 +5,6 @@
   "author": "andrea@parro.it",
   "repository": "parro-it/ngoose.git",
   "license": "MIT",
-  "main": "lib/ngoose",
   "engines": {
     "node": ">=5"
   },
@@ -13,11 +12,11 @@
     "extends": "js"
   },
   "scripts": {
-    "test": "node test/ngoose_test.js | faucet",
-    "lint": "eslint lib test || echo failed"
+    "test": "eslint . && node test | faucet",
+    "lint": "eslint . || echo failed"
   },
   "files": [
-    "lib"
+    "index.js"
   ],
   "devDependencies": {
     "eslint": "^1.10.3",

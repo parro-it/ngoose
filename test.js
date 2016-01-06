@@ -1,6 +1,6 @@
 'use strict';
 const test = require('tape');
-const model = require('../lib/ngoose');
+const model = require('.');
 
 test('ngoose is a function', t => {
   t.equal(typeof model, 'function');
