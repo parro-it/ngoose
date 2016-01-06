@@ -13,16 +13,19 @@
     "extends": "js"
   },
   "scripts": {
-    "test": "mocha",
-    "lint": "eslint lib test"
+    "test": "node test/ngoose_test.js | faucet",
+    "lint": "eslint lib test || echo failed"
   },
   "files": [
     "lib"
   ],
   "devDependencies": {
+    "eslint": "^1.10.3",
     "eslint-config-js": "^2.0.2",
     "expect.js": "^0.2.0",
-    "mocha": "^2.3.4"
+    "faucet": "0.0.1",
+    "mocha": "^2.3.4",
+    "tape": "^4.4.0"
   },
   "dependencies": {
     "fn-name": "^2.0.1",
