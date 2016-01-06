@@ -67,7 +67,7 @@ function checkField(value, key) {
 }
 
 function checkFields(definition) {
-  _(definition).forEach(checkField);
+  definition.forEach(checkField);
 }
 
 function buildFieldWithDefault(FieldDefinition, instance, fieldName) {
