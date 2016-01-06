@@ -22,9 +22,7 @@
   "devDependencies": {
     "eslint": "^1.10.3",
     "eslint-config-js": "^2.0.2",
-    "expect.js": "^0.2.0",
     "faucet": "0.0.1",
-    "mocha": "^2.3.4",
     "tape": "^4.4.0"
   },
   "dependencies": {
