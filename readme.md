@@ -9,8 +9,9 @@ ngoose does one thing well: it create new objects with default fields values bas
 [![NPM module](https://img.shields.io/npm/v/ngoose.svg)](https://npmjs.org/package/ngoose)
 [![NPM downloads](https://img.shields.io/npm/dt/ngoose.svg)](https://npmjs.org/package/ngoose)
 
-[![Coverage](https://codeclimate.com/github/parro-it/ngoose/badges/gpa.svg)](https://codeclimate.com/github/parro-it/ngoose)
+[![Test Coverage](https://codeclimate.com/github/parro-it/ngoose/badges/coverage.svg)](https://codeclimate.com/github/parro-it/ngoose/coverage)
 [![Code Climate](https://codeclimate.com/github/parro-it/ngoose.png)](https://codeclimate.com/github/parro-it/ngoose)
+[![Issue Count](https://codeclimate.com/github/parro-it/ngoose/badges/issue_count.svg)](https://codeclimate.com/github/parro-it/ngoose)
 
 ## Installation
 
