@@ -8,6 +8,8 @@ ngoose does one thing well: it create new objects with default fields values bas
 [![Travis Build Status](https://img.shields.io/travis/parro-it/ngoose.svg)](http://travis-ci.org/parro-it/ngoose)
 [![NPM module](https://img.shields.io/npm/v/ngoose.svg)](https://npmjs.org/package/ngoose)
 [![NPM downloads](https://img.shields.io/npm/dt/ngoose.svg)](https://npmjs.org/package/ngoose)
+
+[![Coverage](https://codeclimate.com/github/parro-it/ngoose/badges/gpa.svg)](https://codeclimate.com/github/parro-it/ngoose)
 [![Code Climate](https://codeclimate.com/github/parro-it/ngoose.png)](https://codeclimate.com/github/parro-it/ngoose)
 
 ## Installation
