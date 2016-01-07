@@ -24,9 +24,5 @@
     "faucet": "0.0.1",
     "tape": "^4.4.0"
   },
-  "dependencies": {
-    "fn-name": "^2.0.1",
-    "lodash": "^2.2.1"
-  },
   "keywords": []
 }

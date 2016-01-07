@@ -1,14 +1,17 @@
 'use strict';
 
-const _ = require('lodash');
-const functionName = require('fn-name');
+const isFunction = fn => typeof fn === 'function';
+const isObject = o => typeof o === 'object';
+const isRegExp = re => re instanceof RegExp;
+const isDate = d => d instanceof Date;
+const forEach = (fn, list) => Object.keys(list).forEach(k => fn(list[k], k));
 
 function isNgoose(value) {
-  return _.isFunction(value) && functionName(value) === 'ngooseModel';
+  return isFunction(value) && value.name === 'ngooseModel';
 }
 
 function errField(value, key) {
-  const type = _.isFunction(value) ? functionName(value) : value;
+  const type = isFunction(value) ? value.name : value;
   throw new Error('Invalid field ' + key + ':' + type + '. Fields must be type constructors, array or objects.');
 }
 
@@ -31,7 +34,7 @@ function checkSupportedTypes(value, key) {
 function checkSupportedObjectTypes(value, key) {
   /* eslint-disable no-use-before-define */
 
-  if (_.isArray(value)) {
+  if (Array.isArray(value)) {
 
     if (value.length < 1) {
       errField(value, key);
@@ -51,36 +54,37 @@ function checkField(value, key) {
     errField();
   }
 
-  if (_.isFunction(value)) {
+  if (isFunction(value)) {
 
     checkSupportedTypes(value, key);
   } else {
-    if (!_.isObject(value) || _.isRegExp(value) || _.isDate(value)) {
+    if (!isObject(value) || isRegExp(value) || isDate(value)) {
       errField(value, key);
     }
 
-    if (_.isObject(value)) {
+    if (isObject(value)) {
       checkSupportedObjectTypes(value, key);
 
     }
   }
 }
 
+
 function checkFields(definition) {
-  definition.forEach(checkField);
+  forEach(checkField, definition);
 }
 
 function buildFieldWithDefault(FieldDefinition, instance, fieldName) {
   const defaultValue = FieldDefinition[1];
   const FieldType = FieldDefinition[0];
 
-  if (_.isFunction(defaultValue)) {
+  if (isFunction(defaultValue)) {
 
     instance[fieldName] = defaultValue.apply(this);
 
   } else  if (FieldType === Date) {
     instance[fieldName] = new FieldType(defaultValue);
-  }  else if (_.isObject(FieldType) && !_.isArray(FieldType) && !_.isFunction(FieldType)) {
+  }  else if (isObject(FieldType) && !Array.isArray(FieldType) && !isFunction(FieldType)) {
     /* eslint-disable no-use-before-define */
     instance[fieldName] = buildInstance(FieldType, defaultValue);
 
@@ -94,12 +98,12 @@ function buildFieldWithDefault(FieldDefinition, instance, fieldName) {
 function buildInstance(definition, data) {
   const instance = {};
 
-  _(definition).forEach(function(FieldType, key) {
+  forEach(function(FieldType, key) {
     if (data && key in data) {
 
-      if (_.isArray(FieldType) && FieldType.length === 1) {
+      if (Array.isArray(FieldType) && FieldType.length === 1) {
         buildArrayField(FieldType, instance, key, data[key]);
-      } else if (_.isObject(data[key]) && _.isObject(FieldType) || isNgoose(FieldType)) {
+      } else if (isObject(data[key]) && isObject(FieldType) || isNgoose(FieldType)) {
         let fieldType = FieldType;
 
         if (isNgoose(fieldType)) {
@@ -111,7 +115,7 @@ function buildInstance(definition, data) {
       }
     } else {
 
-      if (_.isArray(FieldType) && FieldType.length > 1) {
+      if (Array.isArray(FieldType) && FieldType.length > 1) {
         buildFieldWithDefault(FieldType, instance, key);
       } else {
         buildField(FieldType, instance, key);
@@ -119,7 +123,7 @@ function buildInstance(definition, data) {
 
 
     }
-  });
+  }, definition);
 
   if (definition._init) {
     definition._init.call(instance);
@@ -143,9 +147,9 @@ function buildArrayField(FieldType, instance, fieldName, arrayData) {
   instance[fieldName] = values;
 }
 function buildField(FieldType, instance, fieldName) {
-  if (_.isObject(FieldType) && !_.isArray(FieldType) && !_.isFunction(FieldType)) {
+  if (isObject(FieldType) && !Array.isArray(FieldType) && !isFunction(FieldType)) {
     instance[fieldName] = buildInstance(FieldType);
-  } else if (_.isArray(FieldType) && FieldType.length === 1) {
+  } else if (Array.isArray(FieldType) && FieldType.length === 1) {
     buildArrayField(FieldType, instance, fieldName, []);
   } else if (fieldName !== '_init') {
     const nativeFieldType = FieldType;
@@ -162,7 +166,7 @@ function model(definition) {
     errArgument();
   }
 
-  if (!_.isObject(definition) || _.isArray(definition) || _.isRegExp(definition)) {
+  if (!isObject(definition) || Array.isArray(definition) || isRegExp(definition)) {
     errArgument();
   }
 
