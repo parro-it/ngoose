@@ -95,32 +95,79 @@ function buildFieldWithDefault(FieldDefinition, instance, fieldName) {
 
 }
 
-function buildInstance(definition, data) {
+function mkFieldDefinition(constructor) {
+  let definition;
+  if (isNgoose(constructor)) {
+    definition = constructor.definition;
+  } else {
+    definition = constructor;
+  }
+
+  function getConstructorOrBuildInstance(def) {
+    if (typeof def === 'function') {
+      return value => def(value);
+    }
+    return value => buildInstance(def, value);
+  }
+
+  function getConstructor() {
+    if (Array.isArray(definition) && definition.length === 1) {
+      return value => buildArrayField(definition, value);
+    } else if ( isNgoose(definition) ) {
+      getConstructorOrBuildInstance(definition);
+    }
+
+    const fieldConstructor = Array.isArray(definition) && definition.length === 2
+      ? definition[0]
+      : definition;
+
+    return getConstructorOrBuildInstance(fieldConstructor);
+  }
+
+  return {
+    constructor: getConstructor()
+  };
+
+}
+
+function buildInstance(constructor, data) {
+  let definition;
+  if (isNgoose(constructor)) {
+    definition = constructor.definition;
+  } else {
+    definition = constructor;
+  }
+
   const instance = {};
 
-  forEach(function(FieldType, key) {
+  forEach(function(fieldType, key) {
+    const fieldDefinition = mkFieldDefinition(fieldType);
     if (data && key in data) {
-
-      if (Array.isArray(FieldType) && FieldType.length === 1) {
-        buildArrayField(FieldType, instance, key, data[key]);
-      } else if (isObject(data[key]) && isObject(FieldType) || isNgoose(FieldType)) {
-        let fieldType = FieldType;
-
-        if (isNgoose(fieldType)) {
-          fieldType = fieldType.definition;
+      instance[key] = fieldDefinition.constructor(data[key]);
+/*
+      if (Array.isArray(fieldType) && fieldType.length === 1) {
+        instance[key] = buildArrayField(fieldType, data[key]);
+      } else if (isObject(data[key]) && isObject(fieldType) || isNgoose(fieldType)) {
+        if (typeof fieldType === 'function') {
+          instance[key] = fieldType(data[key]);
+        } else {
+          instance[key] = buildInstance(fieldType, data[key]);
         }
-        instance[key] = buildInstance(fieldType, data[key]);
       } else {
-        instance[key] = data[key];
+        const fieldConstructor = Array.isArray(fieldType) && fieldType.length === 2
+          ? fieldType[0]
+          : fieldType;
+
+        instance[key] = fieldConstructor(data[key]);
       }
+      */
     } else {
 
-      if (Array.isArray(FieldType) && FieldType.length > 1) {
-        buildFieldWithDefault(FieldType, instance, key);
+      if (Array.isArray(fieldType) && fieldType.length > 1) {
+        buildFieldWithDefault(fieldType, instance, key);
       } else {
-        buildField(FieldType, instance, key);
+        buildField(fieldType, instance, key);
       }
-
 
     }
   }, definition);
@@ -132,25 +179,29 @@ function buildInstance(definition, data) {
   return  instance;
 }
 
-function buildArrayField(FieldType, instance, fieldName, arrayData) {
+function buildArrayField(FieldType, arrayData) {
   const values = [];
+  let fieldType = FieldType[0];
 
-  arrayData.forEach(function(item) {
+  if (isNgoose(fieldType)) {
+    fieldType = fieldType.definition;
+  }
+  if (!arrayData.length && fieldType.defaultRow) {
+    values.push(buildInstance(fieldType, undefined));
+  } else {
+    arrayData.forEach(function(item) {
+      values.push(buildInstance(fieldType, item));
+    });
+  }
 
-    let fieldType = FieldType[0];
-
-    if (isNgoose(fieldType)) {
-      fieldType = fieldType.definition;
-    }
-    values.push(buildInstance(fieldType, item));
-  });
-  instance[fieldName] = values;
+  return values;
 }
+
 function buildField(FieldType, instance, fieldName) {
   if (isObject(FieldType) && !Array.isArray(FieldType) && !isFunction(FieldType)) {
     instance[fieldName] = buildInstance(FieldType);
   } else if (Array.isArray(FieldType) && FieldType.length === 1) {
-    buildArrayField(FieldType, instance, fieldName, []);
+    instance[fieldName] = buildArrayField(FieldType, []);
   } else if (fieldName !== '_init') {
     const nativeFieldType = FieldType;
     instance[fieldName] = nativeFieldType();
@@ -173,7 +224,7 @@ function model(definition) {
   checkFields(definition);
 
   const factory = function ngooseModel(data) {
-    return buildInstance(definition, data);
+    return buildInstance(factory, data);
   };
   factory.definition = definition;
   return  factory;

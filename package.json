@@ -12,8 +12,8 @@
     "extends": "js"
   },
   "scripts": {
-    "test": "eslint . && node test | faucet",
-    "lint": "eslint . || echo failed",
+    "test": "eslint *.js && node test | faucet",
+    "lint": "eslint *.js || echo failed",
     "cov": "istanbul cover test.js && codeclimate-test-reporter < coverage/lcov.info"
   },
   "files": [
