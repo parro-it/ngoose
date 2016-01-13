@@ -105,7 +105,7 @@ function mkFieldDefinition(constructor) {
 
   function getConstructorOrBuildInstance(def) {
     if (typeof def === 'function') {
-      return value => def(value);
+      return def;
     }
     return value => buildInstance(def, value);
   }
@@ -144,23 +144,7 @@ function buildInstance(constructor, data) {
     const fieldDefinition = mkFieldDefinition(fieldType);
     if (data && key in data) {
       instance[key] = fieldDefinition.constructor(data[key]);
-/*
-      if (Array.isArray(fieldType) && fieldType.length === 1) {
-        instance[key] = buildArrayField(fieldType, data[key]);
-      } else if (isObject(data[key]) && isObject(fieldType) || isNgoose(fieldType)) {
-        if (typeof fieldType === 'function') {
-          instance[key] = fieldType(data[key]);
-        } else {
-          instance[key] = buildInstance(fieldType, data[key]);
-        }
-      } else {
-        const fieldConstructor = Array.isArray(fieldType) && fieldType.length === 2
-          ? fieldType[0]
-          : fieldType;
 
-        instance[key] = fieldConstructor(data[key]);
-      }
-      */
     } else {
 
       if (Array.isArray(fieldType) && fieldType.length > 1) {
