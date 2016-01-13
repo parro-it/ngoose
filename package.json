@@ -1,7 +1,7 @@
 {
   "name": "ngoose",
   "description": "javascript object factory with defaults",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "andrea@parro.it",
   "repository": "parro-it/ngoose.git",
   "license": "MIT",
@@ -9,7 +9,10 @@
     "node": ">=5"
   },
   "eslintConfig": {
-    "extends": ["js", "features"]
+    "extends": [
+      "js",
+      "features"
+    ]
   },
   "scripts": {
     "test": "eslint *.js && node test | faucet",
