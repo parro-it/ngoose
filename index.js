@@ -1,5 +1,6 @@
 'use strict';
 
+
 const isFunction = fn => typeof fn === 'function';
 const isObject = o => typeof o === 'object';
 const isRegExp = re => re instanceof RegExp;
